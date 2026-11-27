@@ -1,2 +1,724 @@
-# tethernova
-TetherNova – Cryptocurrency investment platform with user dashboard, deposit and withdrawal management, and admin panel.
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d0b">
+<title>TetherNova — Digital Asset Overview</title>
+<style>
+:root{--bg:#080d0b;--panel:#101915;--panel2:#14221b;--line:#23372b;--green:#28d17c;--green2:#a4f2c4;--muted:#91a79a;--white:#eef8f1;--yellow:#f1c66d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#173b29 0,transparent 35%),var(--bg);color:var(--white);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+a{color:inherit;text-decoration:none}.shell{max-width:1200px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 0 22px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#39e58b,#138a4e);display:grid;place-items:center;color:#03170c;font-size:23px;font-weight:900;box-shadow:0 8px 30px #20c87533}.brand strong{font-size:20px;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:1.6px;text-transform:uppercase}
+.nav{display:flex;gap:22px;color:#b8c9be;font-size:13px}.nav a:hover{color:var(--green2)}.status{border:1px solid #795f2a;background:#2a2415;color:#f5d58b;padding:7px 11px;border-radius:30px;font-size:11px;white-space:nowrap}
+
+.ticker{margin:16px 0 4px;border:1px solid #234331;background:#0d1911;border-radius:13px;overflow:hidden}
+.ticker-head{display:flex;align-items:center;gap:9px;padding:9px 13px;border-bottom:1px solid #203729;color:#a9c5b3;font-size:10px;letter-spacing:1.2px;text-transform:uppercase}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#e8bd61;box-shadow:0 0 0 4px #e8bd6118}
+.ticker-window{overflow:hidden;white-space:nowrap;padding:11px 0}
+.ticker-track{display:inline-flex;align-items:center;gap:12px;min-width:max-content;animation:tn-scroll 34s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:9px;padding:0 16px;border-right:1px solid #294232;font-size:12px;color:#dcebe1}
+.ticker-item b{color:var(--green2);font-weight:700}
+.ticker-item .amount{color:#fff;font-variant-numeric:tabular-nums}
+.ticker-tag{color:#e7c778;font-size:9px;text-transform:uppercase;letter-spacing:.7px}
+@keyframes tn-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
+.hero{padding:34px 0 22px;display:flex;justify-content:space-between;gap:20px;align-items:end}.eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(27px,5vw,42px);line-height:1.13;margin:8px 0}.hero p{color:var(--muted);max-width:650px;margin:0}.hero-note{font-size:12px;color:var(--muted);max-width:240px;text-align:right}
+.grid{display:grid;grid-template-columns:1.3fr .9fr;gap:16px}.card{background:linear-gradient(145deg,#142019,#0e1712);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 45px #0003}.card h2{font-size:15px;margin:0 0 16px}.balance{font-size:clamp(30px,5vw,42px);font-weight:750;letter-spacing:-1px;margin:3px 0}.balance small{font-size:14px;color:var(--muted);font-weight:500;letter-spacing:0}.muted{color:var(--muted)}.pill{display:inline-flex;align-items:center;gap:7px;color:var(--green2);background:#123522;border:1px solid #245b3c;padding:5px 9px;border-radius:30px;font-size:11px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.metric{background:#0b130e;border:1px solid #1d3024;border-radius:12px;padding:12px}.metric span{display:block;color:var(--muted);font-size:11px}.metric b{display:block;font-size:16px;margin-top:4px}
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.wallet-address{font-family:ui-monospace,SFMono-Regular,monospace;font-size:12px;overflow-wrap:anywhere}
+.field-note{font-size:11px;color:var(--muted);margin:7px 0 0}
+.wallet-display{padding:12px;border:1px dashed #3d694c;background:#09140d;border-radius:10px;margin-top:10px}button{border:0;border-radius:10px;padding:11px 16px;font:inherit;font-size:13px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:#04170c}.secondary{background:#1b2a21;border:1px solid #35513e;color:#dceee2}.disabled{background:#26312a;color:#7e9083;cursor:not-allowed}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;color:#b9cbbf;font-size:12px;margin:12px 0 6px}input,select{width:100%;border:1px solid #304637;background:#09120c;color:var(--white);padding:11px;border-radius:10px;font:inherit;outline:none}input:focus,select:focus{border-color:var(--green)}
+.calc-result{margin-top:14px;padding:13px;border:1px solid #24583a;background:#0b2114;border-radius:12px}.calc-result span{font-size:11px;color:var(--muted)}.calc-result b{display:block;color:var(--green2);font-size:23px}
+.wide{grid-column:1/-1}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:520px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #203127;font-size:12px}th{color:var(--muted);font-weight:600}td{color:#dce9df}.type{color:var(--green2)}.demo{color:var(--yellow);font-size:10px;border:1px solid #65532b;padding:3px 7px;border-radius:20px}
+.referral{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.reward{display:flex;gap:20px}.reward b{display:block;color:var(--green2);font-size:21px}.reward span{font-size:11px;color:var(--muted)}
+.disclaimer{border:1px solid #65532b;background:#211d12;color:#e6d4a6;border-radius:14px;padding:14px 16px;font-size:12px;margin-top:16px}
+footer{padding:25px 0 10px;color:#718579;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.modal-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);padding:18px;align-items:center;justify-content:center;overflow:auto}
+.modal-overlay.open{display:flex}
+.modal-card{position:relative;width:min(560px,100%);max-height:calc(100vh - 36px);overflow:auto;margin:auto;background:linear-gradient(145deg,#142019,#0e1712);border:1px solid #35513e;border-radius:18px;padding:22px;box-shadow:0 24px 80px #000b}
+.modal-close{float:right;background:#1b2a21;border:1px solid #35513e;color:#dceee2;padding:6px 11px;font-size:18px;line-height:1}
+body.modal-open{overflow:hidden}
+@media(max-width:760px){.shell{padding:15px}.nav{display:none}.hero{display:block}.hero-note{text-align:left;margin-top:14px;max-width:none}.grid{grid-template-columns:1fr}.wide{grid-column:auto}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:1/-1}}
+[hidden]{display:none!important}
+
+/* TetherNova reward promotion */
+.tn-reward-overlay{
+  position:fixed;inset:0;z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;background:rgba(0,0,0,.86);
+  backdrop-filter:blur(7px);overflow:auto;
+}
+.tn-reward-card{
+  position:relative;width:min(480px,100%);
+  padding:38px 24px 26px;text-align:center;
+  border:2px solid #e33b32;border-radius:22px;
+  background:radial-gradient(ellipse at top,#421511,#17100f 58%,#100d0d);
+  box-shadow:0 0 18px #ff302b99,0 0 55px #ff302b44,
+             inset 0 0 25px #ff8b241c;
+  animation:tn-reward-glow 2s ease-in-out infinite alternate,
+            tn-reward-enter .65s ease-out;
+}
+.tn-reward-card h2{
+  color:#ff6252;font-size:25px;line-height:1.25;
+  margin:8px 0 12px;text-shadow:0 0 15px #ff302b99;
+}
+.tn-reward-card .tn-reward-sub{
+  color:#f3d6b0;font-size:13px;margin:0 0 20px;
+}
+.tn-reward-items{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.tn-reward-item{
+  padding:16px 9px;border:1px solid #d58a37;
+  border-radius:14px;background:#261711;
+  box-shadow:inset 0 0 15px #ff9b291c;
+}
+.tn-reward-item b{
+  display:block;color:#ffd36e;font-size:29px;
+  text-shadow:0 0 12px #ff9b29;
+}
+.tn-reward-item span{
+  display:block;color:#ffe8c4;font-size:12px;margin-top:5px;
+}
+.tn-reward-terms{
+  color:#d8c3ad;font-size:11px;line-height:1.7;
+  text-align:left;margin:18px 0 0;
+}
+.tn-reward-count{
+  color:#ffd36e;font-size:12px;margin-top:20px;
+}
+.tn-reward-close{
+  position:absolute;top:10px;left:10px;
+  width:38px;height:38px;padding:0;
+  border:1px solid #ff7666;border-radius:50%;
+  background:#3b1715;color:#fff;font-size:25px;
+  line-height:1;box-shadow:0 0 14px #ff302b88;
+}
+.tn-reward-close:hover{background:#79231d}
+@keyframes tn-reward-glow{
+  from{box-shadow:0 0 14px #ff302b66,0 0 35px #ff302b22}
+  to{box-shadow:0 0 25px #ff302b99,0 0 65px #ff8b2455}
+}
+@keyframes tn-reward-enter{
+  from{opacity:0;transform:scale(.92)}
+  to{opacity:1;transform:scale(1)}
+}
+@media(max-width:380px){
+  .tn-reward-card{padding:38px 15px 20px}
+  .tn-reward-card h2{font-size:21px}
+  .tn-reward-item b{font-size:25px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tn-reward-card{animation:none}
+}
+
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+  <a class="brand" href="#"><span class="mark">T</span><span><strong>TetherNova</strong><small>Digital Asset Platform</small></span></a>
+  <nav class="nav"><a href="#dashboard">Dashboard</a><a href="#calculator">Calculator</a><a href="#referrals">Referrals</a><a href="#apiAccount">Security</a><a href="#activity">Activity</a></nav>
+  <span class="status">ACCOUNT ACCESS ACTIVE</span>
+</header>
+
+<section class="ticker" aria-label="Illustrative platform activity ticker">
+  <div class="ticker-head"><span class="live-dot"></span><b>Recent platform activity</b><span class="ticker-tag">Demo examples · not live transactions</span></div>
+  <div class="ticker-window">
+    <div class="ticker-track">
+      <span class="ticker-item"><b>Sample User 01</b> · Global · <span class="amount">50.00 USDT</span> · Deposit example</span>
+      <span class="ticker-item"><b>Sample User 02</b> · Global · <span class="amount">20.00 USDT</span> · Withdrawal example</span>
+      <span class="ticker-item"><b>Sample User 03</b> · Global · <span class="amount">3.00 USDT</span> · Referral example</span>
+      <span class="ticker-item"><b>Sample User 04</b> · Global · <span class="amount">75.00 USDT</span> · Deposit example</span>
+      <span class="ticker-item"><b>Sample User 05</b> · Global · <span class="amount">25.00 USDT</span> · Withdrawal example</span>
+      <span class="ticker-item"><b>Sample User 01</b> · Global · <span class="amount">50.00 USDT</span> · Deposit example</span>
+      <span class="ticker-item"><b>Sample User 02</b> · Global · <span class="amount">20.00 USDT</span> · Withdrawal example</span>
+      <span class="ticker-item"><b>Sample User 03</b> · Global · <span class="amount">3.00 USDT</span> · Referral example</span>
+      <span class="ticker-item"><b>Sample User 04</b> · Global · <span class="amount">75.00 USDT</span> · Deposit example</span>
+      <span class="ticker-item"><b>Sample User 05</b> · Global · <span class="amount">25.00 USDT</span> · Withdrawal example</span>
+    </div>
+  </div>
+</section>
+
+<section class="hero">
+  <div><div class="eyebrow">Welcome to TetherNova</div><h1>Your Comprehensive Digital Asset Overview</h1><p>TetherNova is a modern platform designed to help you manage and monitor Tether (USDT) activity on the TRON network (TRC20). Explore your account overview, asset information, and the tools available across the platform.</p></div>
+  <div class="hero-note">Supported network<br><b style="color:var(--green2)">TRON · TRC20</b><br>Digital asset: USDT</div>
+</section>
+
+<main class="grid" id="dashboard">
+  <section class="card">
+    <h2>Account overview</h2>
+    <div class="muted" style="font-size:12px">Sign in to view your account balance</div>
+    <div class="balance">— <small>USDT</small></div>
+    <span class="pill">Account details appear after login</span>
+    <div class="metrics">
+      <div class="metric"><span>Active investments</span><b>—</b></div>
+      <div class="metric"><span>Available to withdraw</span><b>—</b></div>
+      <div class="metric"><span>Network</span><b>TRON · TRC20</b></div>
+    </div>
+    <div class="actions"><button class="primary" type="button" id="openDeposit">Deposit</button><button class="secondary" type="button" id="openWithdraw">Withdraw</button></div>
+  </section>
+
+  <div class="modal-overlay" id="depositModal" role="dialog" aria-modal="true" aria-labelledby="depositTitle"><section class="card modal-card" id="deposit-wallet">
+    <button class="modal-close" type="button" data-close-modal="depositModal" aria-label="Close">×</button>
+    <h2 id="depositTitle">Deposit wallet address</h2>
+    <p class="muted" style="font-size:12px;margin-top:-6px">Send USDT to the receiving address shown below. After the transfer is confirmed on the TRON network, submit its TXID. The administrator will review the request and credit your account after approval.</p>
+    <label for="platformWallet">Platform receiving wallet address (TRON / TRC20)</label>
+    <input id="platformWallet" class="wallet-address" type="text" value="TMxstbh6PXqWCjVpyavwkyDjaLFmMxP2kn" autocomplete="off" spellcheck="false" readonly aria-readonly="true" style="direction:ltr;text-align:left;font-size:14px;font-weight:700;min-height:48px;border:2px solid #28d17c;background:#06150c;color:#a4f2c4">
+    <div class="actions">
+      <button class="primary" id="copyWallet">Copy deposit address</button>
+    </div>
+    <label for="modalTxid">Deposit Transaction ID (TXID)</label>
+    <input id="modalTxid" type="text" placeholder="64-character transaction TXID" dir="ltr">
+    <button class="primary" id="modalDepositSubmit" type="button">Submit Deposit Request</button>
+    <p id="modalDepositStatus" class="field-note">After your transfer is confirmed, enter the TXID and submit your deposit request for administrator review.</p>
+    <div class="wallet-display"><div class="muted" style="font-size:11px">Address displayed to depositors</div><div id="walletPreview" class="wallet-address" dir="ltr" style="font-size:14px;font-weight:700;color:#a4f2c4">TMxstbh6PXqWCjVpyavwkyDjaLFmMxP2kn</div></div>
+    <p id="walletStatus" class="field-note">The receiving address is displayed for deposits. Transfers are not automatically monitored; submitted TXIDs are reviewed manually by the administrator.</p>
+    <div class="disclaimer"><b>Important:</b> Use only a public receiving address. Never paste a seed phrase or private key here. Submit the transaction TXID after sending USDT. Deposits are credited to your account only after the administrator verifies and approves the transaction. Never enter a seed phrase or private key.</div>
+  </section></div>
+
+  <section class="card" id="calculator">
+    <h2>Compound calculator</h2>
+    <div class="formgrid">
+      <div><label for="principal">Starting amount (USDT)</label><input id="principal" type="number" min="50" step="1" value="50"></div>
+      <div><label for="days">Number of days</label><input id="days" type="number" min="1" max="365" value="10"></div>
+    </div>
+    <label for="rate">Daily rate used for calculation</label><input id="rate" type="number" min="0" max="100" step=".1" value="2">
+    <div class="calc-result"><span>Calculated ending value</span><b id="future">$60.95 USDT</b><span id="gain">Calculated change: +$10.95 USDT</span></div>
+    <p class="muted" style="font-size:11px;margin-bottom:0">This calculator uses the amount, duration and rate you enter. Results are estimates only and do not represent actual account profit or guarantee future returns.</p>
+  </section>
+
+  <section class="card" id="referrals">
+    <h2>Invite friends</h2>
+    <div class="referral"><div><div class="muted" style="font-size:12px">Referral rewards</div><div class="reward"><div><b>5 USDT</b><span>Referrer reward</span></div><div><b>3 USDT</b><span>New user reward</span></div></div></div></div>
+    <p class="muted" style="font-size:11px;margin:14px 0 0">The referrer receives 5 USDT after an invited friend makes an approved deposit and starts their first investment. The new user receives a one-time 3 USDT bonus when starting their first investment. Eligible rewards are credited to the account balance.</p>
+  </section>
+
+  <section class="card">
+    <h2>Withdrawal policy</h2>
+    <div class="metrics" style="margin-top:0">
+      <div class="metric"><span>Waiting period</span><b>10 days</b></div>
+      <div class="metric"><span>Minimum amount</span><b>20 USDT</b></div>
+      <div class="metric"><span>Processing</span><b>Manual review</b></div>
+    </div>
+    <p class="muted" style="font-size:11px;margin-bottom:8px">The 10-day eligibility period begins when you explicitly start an investment after a qualifying deposit. Registration or deposit alone does not start the period.</p>
+    <div class="actions"><button class="primary" type="button" id="startInvestment" hidden>Start investment</button></div>
+    <p class="muted" id="investmentStatus" style="font-size:11px;margin-bottom:0">Investment has not started.</p>
+  </section>
+
+
+  <div class="modal-overlay" id="withdrawModal" role="dialog" aria-modal="true" aria-labelledby="withdrawTitle">
+    <section class="card modal-card">
+      <button class="modal-close" type="button" data-close-modal="withdrawModal" aria-label="Close">×</button>
+      <h2 id="withdrawTitle">Withdrawal · TRON / TRC20</h2>
+      <p class="muted" style="font-size:11px">Withdrawals become eligible after the 10-day investment period, subject to the platform rules and account balance.</p>
+      <div class="calc-result"><b id="withdrawCountdown">Investment not started</b><span id="withdrawLockText">Start your investment to begin the 10-day waiting period.</span></div>
+      <label for="withdrawAddress">Your destination wallet address (TRON / TRC20)</label>
+      <input id="withdrawAddress" type="text" autocomplete="off" spellcheck="false" placeholder="T... (34-character TRON address)">
+      <div class="actions"><button class="secondary" id="saveWithdrawAddress" type="button">Save address</button></div>
+      <p id="withdrawAddressStatus" class="muted" style="font-size:11px">Your withdrawal address is saved in this browser only.</p>
+      <label for="withdrawAmount">Withdrawal amount (minimum 20 USDT)</label>
+      <input id="withdrawAmount" type="number" min="20" step="1" value="20" placeholder="Amount in USDT">
+      <div style="display:none"><div class="actions"><button class="secondary" id="withdrawStart" type="button" disabled>Prepare demo withdrawal</button><button class="primary" id="withdrawVerify" type="button" disabled>Approve with code</button></div></div>
+      <button class="primary" id="modalWithdrawSubmit" type="button">Submit Withdrawal Request</button>
+      <p id="modalWithdrawStatus" class="field-note">Withdrawal requests are reviewed by the administrator. Approved withdrawals are transferred manually.</p>
+      <p id="withdrawStatus" class="muted" style="font-size:11px">No withdrawal pending.</p>
+      <div class="disclaimer" style="margin-top:12px"><b>Important:</b> Submitting a withdrawal creates a request for administrator review. Approved payments are sent manually on the TRON network; submitting a request does not trigger an automatic transfer.</div>
+    </section>
+  </div>
+
+
+</main>
+
+<div class="disclaimer" lang="en" style="text-align:left;line-height:2">
+  <h2 style="margin:0 0 8px;color:var(--green2);font-size:17px">TetherNova – Trust, Transparency, and Security</h2>
+  <p style="margin:0 0 8px">At <strong>TetherNova</strong>, our mission is to provide a simple, transparent, and secure experience for managing digital assets.</p>
+  <p style="margin:0 0 8px">By focusing on the protection of user information, transparency in our services, and the development of secure infrastructure, we aim to create a reliable environment for digital transactions.</p>
+  <p style="margin:0 0 8px">Asset security, privacy protection, and clear communication about our services are among TetherNova’s core principles.</p>
+  <p style="margin:0 0 8px"><strong>Transparency in services. Security in infrastructure. Trust in every interaction.</strong></p>
+</div>
+
+<footer>
+  <span>© TetherNova · Concept preview</span>
+  <span style="text-align:right">Address (HBC): Poststraße 33, 20354 Hamburg, Germany<br>Phone (HBC): <a href="tel:+49403508585" style="color:inherit">+49 40 350 85 85</a><br>Email: <a href="mailto:supporttethernova@gmail.com" style="color:inherit">supporttethernova@gmail.com</a></span>
+</footer>
+</div>
+<script>
+function updateCalc(){
+ const p=Math.max(0,Number(document.getElementById('principal').value)||0);
+ const d=Math.max(0,Math.min(365,Number(document.getElementById('days').value)||0));
+ const r=Math.max(0,Math.min(100,Number(document.getElementById('rate').value)||0))/100;
+ const fv=p*Math.pow(1+r,d),gain=fv-p;
+ document.getElementById('future').textContent=fv.toFixed(2)+' USDT';
+ document.getElementById('gain').textContent='Calculated change: '+(gain>=0?'+':'')+gain.toFixed(2)+' USDT';
+}
+['principal','days','rate'].forEach(id=>document.getElementById(id).addEventListener('input',updateCalc));
+updateCalc();
+
+// Fixed demo receiving address supplied by the site owner (TRON / USDT-TRC20).
+// This is displayed to visitors; it does not monitor deposits or credit balances.
+const $=id=>document.getElementById(id);
+function openModal(id){const el=$(id);if(el){el.classList.add('open');document.body.classList.add('modal-open');}}
+function closeModal(id){const el=$(id);if(el){el.classList.remove('open');if(!document.querySelector('.modal-overlay.open'))document.body.classList.remove('modal-open');}}
+$('openDeposit').addEventListener('click',()=>openModal('depositModal'));
+$('openWithdraw').addEventListener('click',()=>openModal('withdrawModal'));
+document.querySelectorAll('[data-close-modal]').forEach(btn=>btn.addEventListener('click',()=>closeModal(btn.dataset.closeModal)));
+document.querySelectorAll('.modal-overlay').forEach(overlay=>overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal(overlay.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(el=>closeModal(el.id));});
+const DEFAULT_TRON_ADDRESS='TMxstbh6PXqWCjVpyavwkyDjaLFmMxP2kn';
+const walletInput=$('platformWallet'), walletPreview=$('walletPreview'), walletStatus=$('walletStatus');
+walletInput.value=DEFAULT_TRON_ADDRESS;
+walletPreview.textContent=DEFAULT_TRON_ADDRESS;
+walletStatus.textContent='USDT deposits: TRON network (TRC20). Submit your TXID for manual administrator review.';
+$('copyWallet').addEventListener('click',async()=>{
+ try{
+   await navigator.clipboard.writeText(DEFAULT_TRON_ADDRESS);
+   walletStatus.textContent='TRON deposit address copied.';
+ }catch(e){
+   walletInput.focus(); walletInput.select();
+   walletStatus.textContent='Select and copy the address manually.';
+ }
+});
+
+
+// Investment status is controlled by the server, not browser storage.
+const WITHDRAW_ADDRESS_KEY='tn_demo_withdraw_address';
+let investmentSnapshot=null;
+
+function fmtRemaining(ms){
+ const sec=Math.max(0,Math.floor(ms/1000));
+ const d=Math.floor(sec/86400),h=Math.floor(sec%86400/3600);
+ const m=Math.floor(sec%3600/60),ss=sec%60;
+ return `${d}d ${h}h ${m}m ${ss}s`;
+}
+
+function updateWithdrawalLock(){
+ const x=investmentSnapshot;
+ const started=!!(x&&x.started);
+ const remaining=started?Math.max(0,x.unlockAt-(x.serverNow+(Date.now()-x.receivedAt))):0;
+ const unlocked=started&&remaining<=0;
+
+ $('investmentStatus').textContent=!started
+  ?(x&&x.eligible?'Deposit confirmed. Click the button to start the timer.':'The Start button will be enabled after admin approval of your deposit.')
+  :unlocked?'The 10-day period is complete.':'Investment started. Time remaining: '+fmtRemaining(remaining);
+
+ $('startInvestment').disabled=started;
+ $('startInvestment').textContent=started?'Timer started':'Start Investment';
+
+ $('withdrawCountdown').textContent=!started?'Investment has not started':unlocked?'10 days completed':fmtRemaining(remaining);
+ $('withdrawLockText').textContent=!started?'Please log in and start your investment first.':unlocked?'Withdrawal is now unlocked.':'Withdrawal unlock time: '+new Date(x.unlockAt).toLocaleString();
+
+ $('withdrawStart').disabled=true;
+ $('withdrawVerify').disabled=true;
+}
+
+function applyInvestmentStatus(data){
+ investmentSnapshot={...data,receivedAt:Date.now()};
+ $('startInvestment').hidden=!(data.eligible===true)||!!data.started;
+ $('apiInvestmentState').textContent=!data.eligible?'Awaiting deposit approval':!data.started?'Ready to start':data.unlocked?'10 days completed':'Awaiting completion of the 10-day period';
+ $('apiTodayProfit').textContent=Number(data.todayProfit||0).toFixed(2);
+ $('apiTotalProfit').textContent=Number(data.totalProfit||0).toFixed(2);
+ updateWithdrawalLock();
+}
+
+$('startInvestment').addEventListener('click',()=>{
+ document.dispatchEvent(new Event('tn:start-investment'));
+});
+$('withdrawAddress').value=localStorage.getItem(WITHDRAW_ADDRESS_KEY)||'';
+$('openWithdraw').addEventListener('click',()=>{
+ $('withdrawAddress').value=localStorage.getItem(WITHDRAW_ADDRESS_KEY)||'';
+ updateWithdrawalLock();
+ openModal('withdrawModal');
+});
+$('saveWithdrawAddress').addEventListener('click',()=>{
+ const dest=$('withdrawAddress').value.trim();
+ if(!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(dest)){
+  alert('Please enter a valid TRON address.');return;
+ }
+ localStorage.setItem(WITHDRAW_ADDRESS_KEY,dest);
+ $('withdrawAddressStatus').textContent='Address saved in this browser.';
+});
+updateWithdrawalLock();
+setInterval(updateWithdrawalLock,1000);
+</script>
+
+<section id="apiAccount" style="max-width:1100px;margin:28px auto;padding:20px;background:#101915;border:1px solid #233;border-radius:18px;color:#e5f4e9">
+<h2>TetherNova Account</h2><p id="apiMsg" class="muted">Log in to submit deposits and withdrawal requests.</p>
+<div id="apiAuth" style="display:flex;gap:10px;flex-wrap:wrap"><input id="apiEmail" type="email" placeholder="Email"><input id="apiPass" type="password" placeholder="Password (minimum 10 characters)"><input id="apiInviteCode" type="text" maxlength="12" placeholder="Referral Code (Optional)"><button id="apiLogin" class="primary">Log In</button><button id="apiRegister" class="secondary">Register</button>
+<div id="apiLoginChallenge" hidden style="width:100%">
+  <label for="apiLoginCode">Two-Factor Login Code</label>
+  <input id="apiLoginCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6-digit Authenticator code">
+  <button id="apiLoginVerify" class="primary" type="button">Verify Code & Log In</button>
+</div>
+</div>
+<code id="apiDepositAddress" hidden>TMxstbh6PXqWCjVpyavwkyDjaLFmMxP2kn</code>
+<div id="apiPanel" hidden>
+  <h3>Account Information</h3>
+  <p>Email: <b id="apiAccountEmail"></b></p>
+  <p>Account Balance: <b id="apiAccountBalance"></b> USDT</p>
+  <div id="apiReferralBox" style="margin:14px 0;padding:14px;border:1px solid #345;border-radius:12px">
+    <h3>Invite Friends</h3>
+    <p>Your Referral Code: <b id="apiMyInviteCode"></b>
+    <button id="apiCopyInviteCode" class="secondary" type="button">Copy Code</button></p>
+    <p>Total Registered Referrals: <b id="apiReferralCount">0</b></p>
+    <small>Eligible referral rewards are credited to your account balance after the required deposit and first-investment steps. Withdrawals are processed manually by the administrator.</small>
+  </div>
+  <div id="apiInvestmentInfo" style="margin:14px 0;padding:14px;border:1px solid #345;border-radius:12px">
+    <h3>Investment Status</h3>
+    <p>Timer Status: <b id="apiInvestmentState">Loading</b></p>
+    <p>Profit Today: <b id="apiTodayProfit">0.00</b> USDT</p>
+    <p>Total Profit: <b id="apiTotalProfit">0.00</b> USDT</p>
+    <small>Recorded profit is included in your account balance. Future returns are not guaranteed.</small>
+  </div>
+  <hr>
+  <button id="open2fa" class="secondary" type="button">Account Security & Two-Factor Authentication</button>
+</div>
+
+<div class="modal-overlay" id="twoFactorModal" role="dialog" aria-modal="true" aria-labelledby="twoFactorTitle">
+  <section class="card modal-card">
+    <button id="close2fa" class="modal-close" type="button" aria-label="Close">×</button>
+    <h2 id="twoFactorTitle">Account Security</h2>
+    <p id="api2faStatus">Checking security status...</p>
+    <div id="api2faSetupArea" hidden>
+      <button id="api2faSetup" class="secondary" type="button">Generate Setup Key</button>
+      <div id="api2faEnrollment" hidden>
+        <p>Enter this key in Google Authenticator or Microsoft Authenticator:</p>
+        <p><b id="api2faSecret" style="overflow-wrap:anywhere"></b></p>
+        <button id="api2faCopy" class="secondary" type="button">Copy Key</button>
+        <label for="api2faEnableCode">6-digit App Code</label>
+        <input id="api2faEnableCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="123456">
+        <button id="api2faEnable" class="primary" type="button">Verify & Enable Two-Factor Authentication</button>
+      </div>
+    </div>
+    <div id="api2faDisableArea" hidden>
+      <p>To disable two-factor authentication, enter your current Authenticator code.</p>
+      <input id="api2faDisableCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6-digit Code">
+      <button id="api2faDisable" class="secondary" type="button">Disable Two-Factor Authentication</button>
+    </div>
+    <p id="api2faMessage" class="muted"></p>
+  </section>
+</div>
+<button id="apiLogout" class="secondary" type="button" hidden>Log Out</button>
+<div id="apiAdmin" hidden><h3>Admin Panel — Review Queue</h3><button id="apiAdminRefresh" class="secondary">Refresh Requests</button><div id="apiAdminQueue"></div></div></section>
+<script>
+(()=>{const $=id=>document.getElementById(id),msg=t=>$('apiMsg').textContent=t;let token=localStorage.getItem('tn_api_token')||'';let loginChallenge='';const req=async(url,body)=>{
+const hadToken=!!token;
+const r=await fetch('/api'+url,{method:body?'POST':'GET',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});
+const j=await r.json().catch(()=>({error:'Invalid server response'}));
+if(r.status===401&&hadToken&&!['/login','/register','/login/2fa'].includes(url)){
+token='';
+localStorage.removeItem('tn_api_token');
+$('apiPanel').hidden=true;
+$('apiAuth').hidden=false;
+$('apiLogout').hidden=true;
+$('apiLoginChallenge').hidden=true;
+$('apiAdmin').hidden=true;
+loginChallenge='';
+}
+if(!r.ok)throw Error(j.error||'Error');
+return j;
+};
+async function refreshInvestment(){
+ const data=await req('/investment/status');
+ applyInvestmentStatus(data);
+}
+document.addEventListener('tn:start-investment',async()=>{
+ if(!token){msg('Please log in before starting the timer.');return;}
+ $('startInvestment').disabled=true;
+ try{
+  const result=await req('/investment/start',{});
+  await refreshInvestment();
+  msg(result.message||'Investment status updated.');
+ }catch(e){
+  msg(e.message);
+  $('startInvestment').disabled=false;
+ }
+});
+
+const tradeButtons=['openDeposit','openWithdraw'];
+function showTradeButtons(show){
+  tradeButtons.forEach(id=>{
+    const el=$(id);
+    if(el) el.style.display=show?'':'none';
+  });
+}
+showTradeButtons(false);
+$('apiLogout').hidden=true;
+async function refreshReferrals(){
+  const j=await req('/referrals');
+  $('apiMyInviteCode').textContent=j.inviteCode||'—';
+  $('apiReferralCount').textContent=Number(j.count||0);
+}
+$('apiCopyInviteCode').onclick=async()=>{
+  const code=$('apiMyInviteCode').textContent;
+  if(!code||code==='—')return;
+  try{
+    await navigator.clipboard.writeText(code);
+    msg('Referral code copied.');
+  }catch(e){msg('Automatic copying failed. Please copy the code manually.');}
+};
+
+async function refresh(){
+  const j=await req('/me');
+  $('apiPanel').hidden=false;
+  $('apiAuth').hidden=true;
+  $('apiLoginChallenge').hidden=true;
+  $('apiLogout').hidden=false;
+  $('apiAdmin').hidden=(j.isAdmin!==true);
+  $('apiAccountEmail').textContent=j.user.email;
+  $('apiAccountBalance').textContent=Number(j.user.balance||0).toFixed(2);
+  await refreshInvestment();
+  await refreshReferrals();
+  showTradeButtons(true);
+  await refresh2FA();
+}
+$('open2fa').onclick=async()=>{
+  $('api2faMessage').textContent='';
+  openModal('twoFactorModal');
+  await refresh2FA();
+};
+$('close2fa').onclick=()=>closeModal('twoFactorModal');
+$('twoFactorModal').addEventListener('click',e=>{
+  if(e.target===$('twoFactorModal'))closeModal('twoFactorModal');
+});
+async function refresh2FA(){
+  try{
+    const j=await req('/2fa/status');
+    $('api2faStatus').textContent=j.enabled
+      ? 'Two-factor authentication is enabled for this account.'
+      : 'Two-factor authentication is not enabled yet.';
+    $('api2faSetupArea').hidden=!!j.enabled;
+    $('api2faDisableArea').hidden=!j.enabled;
+    $('api2faEnrollment').hidden=true;
+    $('api2faSecret').textContent='';
+    $('api2faEnableCode').value='';
+  }catch(e){
+    $('api2faStatus').textContent='Failed to check two-factor authentication status: '+e.message;
+  }
+}
+async function auth(url){
+  loginChallenge='';
+  $('apiLoginChallenge').hidden=true;
+  $('apiLoginCode').value='';
+  try{
+    const body={email:$('apiEmail').value,password:$('apiPass').value};
+    if(url==='/register')body.inviteCode=$('apiInviteCode').value.trim();
+    const j=await req(url,body);
+    if(j.requires2fa){
+      loginChallenge=j.challengeToken;
+      $('apiLoginChallenge').hidden=false;
+      $('apiLoginCode').value='';
+      msg('Password verified. Enter your 6-digit Authenticator code.');
+      return;
+    }
+    token=j.token;
+    loginChallenge='';
+    localStorage.setItem('tn_api_token',token);
+    msg('Login successful');
+    await refresh();
+  }catch(e){msg(e.message);}
+}
+$('apiLogin').onclick=()=>auth('/login');
+$('apiRegister').onclick=()=>auth('/register');
+$('apiLoginVerify').onclick=async()=>{
+  if(!loginChallenge){msg('Please enter your email and password first.');return;}
+  try{
+    const j=await req('/login/2fa',{
+      challengeToken:loginChallenge,
+      code:$('apiLoginCode').value.trim()
+    });
+    token=j.token;
+    loginChallenge='';
+    localStorage.setItem('tn_api_token',token);
+    msg('Two-factor login successful.');
+    await refresh();
+  }catch(e){msg(e.message);}
+};
+$('api2faSetup').onclick=async()=>{
+  try{
+    const j=await req('/2fa/setup',{});
+    $('api2faSecret').textContent=j.secret;
+    $('api2faEnrollment').hidden=false;
+    $('api2faMessage').textContent='Enter the key in your Authenticator app and submit the current code.';
+  }catch(e){$('api2faMessage').textContent=e.message;}
+};
+$('api2faCopy').onclick=async()=>{
+  const secret=$('api2faSecret').textContent;
+  if(!secret)return;
+  try{
+    await navigator.clipboard.writeText(secret);
+    $('api2faMessage').textContent='Key copied.';
+  }catch(e){
+    $('api2faMessage').textContent='Automatic copying failed. Please select and copy the key manually.';
+  }
+};
+$('api2faEnable').onclick=async()=>{
+  try{
+    const j=await req('/2fa/enable',{code:$('api2faEnableCode').value.trim()});
+    $('api2faEnableCode').value='';
+    $('api2faMessage').textContent=j.message;
+    await refresh2FA();
+  }catch(e){$('api2faMessage').textContent=e.message;}
+};
+$('api2faDisable').onclick=async()=>{
+  try{
+    const j=await req('/2fa/disable',{code:$('api2faDisableCode').value.trim()});
+    $('api2faDisableCode').value='';
+    $('api2faMessage').textContent=j.message;
+    await refresh2FA();
+  }catch(e){$('api2faMessage').textContent=e.message;}
+};
+$('modalDepositSubmit').onclick=async()=>{
+ const status=$('modalDepositStatus');
+ if(!token){status.textContent='Please log in first.';return;}
+ try{
+  const j=await req('/deposit/claim',{txid:$('modalTxid').value.trim()});
+  status.textContent=j.message;
+  await refresh();
+ }catch(e){status.textContent=e.message;}
+};
+$('modalWithdrawSubmit').onclick=async()=>{
+ const status=$('modalWithdrawStatus');
+ if(!token){status.textContent='Please log in first.';return;}
+ try{
+  const j=await req('/withdrawals',{
+   address:$('withdrawAddress').value.trim(),
+   amount:Number($('withdrawAmount').value)
+  });
+  status.textContent=j.message;
+  await refresh();
+ }catch(e){status.textContent=e.message;}
+};
+$('apiLogout').onclick=()=>{
+  token='';
+  localStorage.removeItem('tn_api_token');
+  $('apiPanel').hidden=true;
+  $('apiAuth').hidden=false;
+  $('apiLoginChallenge').hidden=true;
+  loginChallenge='';
+  $('apiLogout').hidden=true;
+  $('apiAdmin').hidden=true;
+  showTradeButtons(false);
+  msg('You have logged out.');
+};
+
+async function loadAdminQueue(){
+ const j=await req('/admin/queue');
+ const root=$('apiAdminQueue');
+ root.textContent='';
+ function section(title,items,kind){
+  const heading=document.createElement('h4');
+  heading.textContent=title+' ('+items.length+')';
+  root.appendChild(heading);
+  if(!items.length){
+   const empty=document.createElement('p');
+   empty.textContent='No requests found.';
+   root.appendChild(empty);
+   return;
+  }
+  items.forEach(item=>{
+   const card=document.createElement('div');
+   card.style.cssText='border:1px solid #456;border-radius:10px;padding:12px;margin:10px 0;overflow-wrap:anywhere';
+   const info=document.createElement('p');
+   info.textContent=kind==='deposit'
+    ? 'Email: '+item.email+' | Amount: '+item.amount+' USDT | TXID: '+item.txid
+    : 'Email: '+item.email+' | Amount: '+item.amount+' USDT | Address: '+item.address;
+   card.appendChild(info);
+   function action(label,handler){
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='secondary';
+    button.textContent=label;
+    button.style.margin='4px';
+    button.onclick=async()=>{
+     button.disabled=true;
+     try{await handler();await loadAdminQueue();await refresh();}
+     catch(e){msg(e.message);button.disabled=false;}
+    };
+    card.appendChild(button);
+   }
+   if(kind==='deposit'){
+    action('Approve Deposit',()=>req('/admin/deposits/'+item.id+'/approve',{}));
+    action('Reject Deposit',()=>req('/admin/deposits/'+item.id+'/reject',{}));
+   }else{
+    action('Record Payment',()=>{
+     const txid=prompt('Enter the actual payment TXID:');
+     if(!txid) throw Error('Payment recording cancelled');
+     return req('/admin/withdrawals/'+item.id+'/paid',{txid});
+    });
+    action('Reject Withdrawal',()=>req('/admin/withdrawals/'+item.id+'/reject',{}));
+   }
+   root.appendChild(card);
+  });
+ }
+ section('Deposits Pending Review',j.deposits||[],'deposit');
+ section('Withdrawals Pending Review',j.withdrawals||[],'withdrawal');
+}
+$('apiAdminRefresh').onclick=async()=>{try{await loadAdminQueue()}catch(e){msg(e.message)}};
+fetch('/api/config').then(r=>r.json()).then(j=>$('apiDepositAddress').textContent=j.depositAddress);if(token)refresh().catch(()=>{token='';localStorage.removeItem('tn_api_token')});})();
+</script>
+
+
+<div class="tn-reward-overlay" id="tn-reward-popup"
+     role="dialog" aria-modal="true" aria-labelledby="tn-reward-title">
+  <section class="tn-reward-card">
+    <button class="tn-reward-close" id="tn-reward-close"
+      type="button" aria-label="Close reward promotion" hidden>×</button>
+    <div style="color:#ffbd55;font-size:11px;letter-spacing:2px;font-weight:800">
+      TETHERNOVA REWARDS
+    </div>
+    <h2 id="tn-reward-title">INVEST & EARN REWARDS</h2>
+    <p class="tn-reward-sub">Get rewarded when you take part in TetherNova.</p>
+    <div class="tn-reward-items">
+      <div class="tn-reward-item">
+        <b>3 USDT</b>
+        <span>New User Bonus</span>
+      </div>
+      <div class="tn-reward-item">
+        <b>5 USDT</b>
+        <span>Referrer Reward</span>
+      </div>
+    </div>
+    <p class="tn-reward-terms">
+      New users receive a one-time 3 USDT bonus after starting their first
+      investment. Referrers receive 5 USDT when an invited friend makes an
+      approved deposit and starts their first investment. Eligible rewards
+      are credited to the account balance.
+    </p>
+    <div class="tn-reward-count" id="tn-reward-count">
+      Close button available in 10 seconds
+    </div>
+  </section>
+</div>
+<script>
+(function(){
+  const popup=document.getElementById('tn-reward-popup');
+  const close=document.getElementById('tn-reward-close');
+  const count=document.getElementById('tn-reward-count');
+  if(!popup||!close||!count)return;
+  let seconds=10;
+  const timer=setInterval(function(){
+    seconds--;
+    if(seconds>0){
+      count.textContent='Close button available in '+seconds+' seconds';
+    }else{
+      clearInterval(timer);
+      count.hidden=true;
+      close.hidden=false;
+    }
+  },1000);
+  close.addEventListener('click',function(){
+    clearInterval(timer);
+    popup.remove();
+  });
+})();
+</script>
+
+</body>
+</html>
